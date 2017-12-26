@@ -16,6 +16,8 @@ public class SignUpActivity extends AppCompatActivity {
 
     EditText edEmail;
     EditText edPassword;
+    FirebaseAuthListener authListener;
+    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,8 +26,22 @@ public class SignUpActivity extends AppCompatActivity {
 
         edEmail = (EditText) findViewById(R.id.edit_email);
         edPassword = (EditText) findViewById(R.id.edit_password);
+
+        this.mAuth = FirebaseAuth.getInstance();
+        this.authListener = new FirebaseAuthListener(this);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(authListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mAuth.removeAuthStateListener(authListener);
+    }
 
     public void buttonSignUpClick(View view) {
         String email = edEmail.getText().toString();
@@ -35,11 +51,12 @@ public class SignUpActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        String msg = task.isSuccessful() ? "SIGN UP OK!":
-                                "SIGN UP ERROR!";
+                        String msg = task.isSuccessful() ? "SIGN UP OK!": "SIGN UP ERROR!";
+
                         Toast.makeText(SignUpActivity.this, msg,
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
     }
+
 }
