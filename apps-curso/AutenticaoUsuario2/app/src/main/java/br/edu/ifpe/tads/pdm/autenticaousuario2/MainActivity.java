@@ -1,6 +1,5 @@
 package br.edu.ifpe.tads.pdm.autenticaousuario2;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -16,11 +16,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+
+/* https://firebase.google.com/docs/auth/android/google-signin */
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     private EditText editEmail, editSenha;
     private Button botaoLogin;
+    private TextView textoCadastrar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +34,17 @@ public class MainActivity extends AppCompatActivity {
         editEmail = (EditText) findViewById(R.id.emailId);
         editSenha = (EditText) findViewById(R.id.senhaId);
         botaoLogin = (Button) findViewById(R.id.botaoLoginId);
+        textoCadastrar = (TextView) findViewById(R.id.textoCadastrarId);
 
+
+        textoCadastrar.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CadastrarUsuarioActivity.class);
+                startActivity(intent);
+            }
+        });
 
         /* Já redireciona para a HomeActivity */
         if ( estaLogado() == true ){

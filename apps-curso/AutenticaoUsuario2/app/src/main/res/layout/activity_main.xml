@@ -47,5 +47,14 @@
         android:layout_marginTop="24dp"
         android:text="Login" />
 
+    <TextView
+        android:id="@+id/textoCadastrarId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/botaoLoginId"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp"
+        android:text="Não possui conta? Cadastre-se" />
+
 
 </RelativeLayout>
