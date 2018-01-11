@@ -2,9 +2,13 @@ package br.edu.ifpe.tads.pdm.firebaseapp;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import br.edu.ifpe.tads.pdm.firebaseapp.model.Produto;
 import br.edu.ifpe.tads.pdm.firebaseapp.model.Usuario;
@@ -18,7 +22,8 @@ public class MainActivity extends AppCompatActivity {
 
     /* Referencia, a partir do nó raíz, os sub nós */
     private DatabaseReference usuariosReferenciaFB = firebaseReferenciaRaiz.child("usuarios");
-    private  DatabaseReference produtosReferenciaFB = firebaseReferenciaRaiz.child("produtos");
+    private  DatabaseReference produtosReferenciaFB = firebaseReferenciaRaiz.child("produtos")
+            .child("002");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,20 +35,35 @@ public class MainActivity extends AppCompatActivity {
 
         //usuarioDBReferencia.child("003").child("nome").setValue("Betânia Silva");
 
+//
+//        Usuario usuario = new Usuario();
+//        usuario.setNome("Cássio");
+//        usuario.setSobrenome("Silva");
+//        usuario.setIdade(24);
+//        usuario.setSexo("Masculino");
+//
+//        usuariosReferenciaFB.child("002").setValue(usuario);
+//
+//
+//        Produto produto = new Produto();
+//        produto.setCor("Grafite");
+//        produto.setDescricao("Moto G5 Plus");
+//        produto.setFabricante("Motorola");
+//
+//        produtosReferenciaFB.child("002").setValue(produto);
 
-        Usuario usuario = new Usuario();
-        usuario.setNome("Beco");
-        usuario.setSobrenome("Silva");
-        usuario.setIdade(45);
-        usuario.setSexo("Masculino");
+        usuariosReferenciaFB.addValueEventListener(new ValueEventListener() {
 
-        usuariosReferenciaFB.child("002").setValue(usuario);
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.i("FIREBASE", dataSnapshot.getValue().toString());
+            }
 
-        Produto produto = new Produto();
-        produto.setCor("Preto");
-        produto.setDescricao("Notebook Inspiron");
-        produto.setFabricante("DELL");
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-        produtosReferenciaFB.child("002").setValue(produto);
+            }
+        });
+
     }
 }
