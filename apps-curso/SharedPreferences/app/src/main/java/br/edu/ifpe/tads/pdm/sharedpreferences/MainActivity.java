@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 /* O parâmetro 0 indica que os dados serão salvos no modo CONTEXT_MODE_PRIVATE,
-                * conforme o qual os dados são restritos à aplicação atual */
+                * isto é, os dados estarão restritos à aplicação atual */
 
                 SharedPreferences sharedPreferences = getSharedPreferences(ARQUIVO_PREFERENCIA, 0);
                 SharedPreferences.Editor editorSharedPreferences = sharedPreferences.edit();
@@ -74,9 +74,12 @@ public class MainActivity extends AppCompatActivity {
 
         String nomeRecuperado = "";
 
+        /* Se existir essa chave 'nomeKey' */
         if( sharedPreferences.contains("nomeKey")){
 
+            /* Recupera seu valor*/
             nomeRecuperado = sharedPreferences.getString("nomeKey", "NAME NOT FOUND :/");
+            /* Exibe num textView */
             textoSaudacao.setText("Bem-vindo, " + nomeRecuperado + "!");
 
         }else{
