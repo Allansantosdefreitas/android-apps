@@ -25,15 +25,14 @@ public class MainActivity extends AppCompatActivity {
 
 
     private ListView listViewGUI;
-    private ArrayList<String> arrayString = new ArrayList<>();
+    private ArrayList<Usuario> arrayUsuarios = new ArrayList<>();
 
     /* Referencia o nó Raiz (root) da estrutura de dados do Firebase ;) */
     private DatabaseReference firebaseReferenciaRaiz = FirebaseDatabase.getInstance()
             .getReference();
 
     /* Referencia, a partir do nó raíz, os sub nós */
-    private DatabaseReference usuariosReferenciaFB = firebaseReferenciaRaiz.child("usuarios")
-            .child("002");
+    private DatabaseReference usuariosReferenciaFB = firebaseReferenciaRaiz.child("usuarios");
     private  DatabaseReference produtosReferenciaFB = firebaseReferenciaRaiz.child("produtos");
 
     @Override
@@ -70,10 +69,10 @@ public class MainActivity extends AppCompatActivity {
 //        arrayString.add("hi");
 //        arrayString.add("hey");
 
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+        final ArrayAdapter<Usuario> arrayAdapter = new ArrayAdapter<Usuario>(
             this,
             android.R.layout.simple_list_item_1,
-            arrayString
+            arrayUsuarios
         );
 
         listViewGUI.setAdapter(arrayAdapter);
@@ -81,10 +80,13 @@ public class MainActivity extends AppCompatActivity {
         usuariosReferenciaFB.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                //Usuario user = (Usuario) dataSnapshot.getValue(Usuario.class);
 
-                String attUser = new String (dataSnapshot.getValue(String.class));
-                arrayString.add(attUser);
+                Usuario user = (Usuario) dataSnapshot.getValue(Usuario.class);
+                arrayUsuarios.add(user);
+
+//                String attUser = new String (dataSnapshot.getValue(String.class));
+//                arrayUsuarios.add(attUser);
+
 
                 arrayAdapter.notifyDataSetChanged();
             }
