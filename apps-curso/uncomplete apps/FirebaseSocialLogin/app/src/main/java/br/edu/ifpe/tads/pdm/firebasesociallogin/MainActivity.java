@@ -33,14 +33,13 @@ public class MainActivity extends AppCompatActivity {
 
             /* Usuário logado */
             Log.d("AUTH", firebaseAuth.getCurrentUser().getEmail());
-            Toast.makeText(MainActivity.this, "LOGADO", Toast.LENGTH_SHORT)
-                    .show();
 
         }else{
 
             startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder()
                     .setProviders(
                             AuthUI.FACEBOOK_PROVIDER,
+                            AuthUI.EMAIL_PROVIDER,
                             AuthUI.GOOGLE_PROVIDER)
                     .build(),RC_SIGN_IN );
 
@@ -60,11 +59,8 @@ public class MainActivity extends AppCompatActivity {
 
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                Toast.makeText(MainActivity.this, "DES_LOGADO", Toast.LENGTH_SHORT)
-                                        .show();
                                 Log.d("AUTH", "User logged out");
 
-                                /* VOLTAR PARA A LOGIN ACTIVITY*/
                                 finish();
 
                             }
@@ -82,16 +78,11 @@ public class MainActivity extends AppCompatActivity {
             if ( resultCode == RESULT_OK ){
 
                 /* Usuário logado */
-                Toast.makeText(MainActivity.this, "LOGADO", Toast.LENGTH_SHORT)
-                        .show();
-
-                //Toast.makeText(getApplicationContext(), "Hi, " + firebaseAuth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
+               Toast.makeText(getApplicationContext(), "Hi, " + firebaseAuth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
                 Log.d("AUTH", firebaseAuth.getCurrentUser().getEmail());
 
             }else{
                 /* Não autenticado */
-                Toast.makeText(MainActivity.this, "não LOGADO", Toast.LENGTH_SHORT)
-                        .show();
                 Log.d("AUTH" , "Não autenticado");
             }
         }

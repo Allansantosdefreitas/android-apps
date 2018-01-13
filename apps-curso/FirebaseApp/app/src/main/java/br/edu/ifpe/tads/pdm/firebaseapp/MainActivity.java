@@ -3,27 +3,38 @@ package br.edu.ifpe.tads.pdm.firebaseapp;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 import br.edu.ifpe.tads.pdm.firebaseapp.model.Produto;
 import br.edu.ifpe.tads.pdm.firebaseapp.model.Usuario;
 
+
 public class MainActivity extends AppCompatActivity {
 
+
+    private ListView listViewGUI;
+    private ArrayList<String> arrayString = new ArrayList<>();
 
     /* Referencia o nó Raiz (root) da estrutura de dados do Firebase ;) */
     private DatabaseReference firebaseReferenciaRaiz = FirebaseDatabase.getInstance()
             .getReference();
 
     /* Referencia, a partir do nó raíz, os sub nós */
-    private DatabaseReference usuariosReferenciaFB = firebaseReferenciaRaiz.child("usuarios");
-    private  DatabaseReference produtosReferenciaFB = firebaseReferenciaRaiz.child("produtos")
+    private DatabaseReference usuariosReferenciaFB = firebaseReferenciaRaiz.child("usuarios")
             .child("002");
+    private  DatabaseReference produtosReferenciaFB = firebaseReferenciaRaiz.child("produtos");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +63,45 @@ public class MainActivity extends AppCompatActivity {
 //
 //        produtosReferenciaFB.child("002").setValue(produto);
 
-        usuariosReferenciaFB.addValueEventListener(new ValueEventListener() {
+
+        listViewGUI = (ListView)  findViewById(R.id.listViewId);
+//
+//        arrayString.add("oi");
+//        arrayString.add("hi");
+//        arrayString.add("hey");
+
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+            this,
+            android.R.layout.simple_list_item_1,
+            arrayString
+        );
+
+        listViewGUI.setAdapter(arrayAdapter);
+
+        usuariosReferenciaFB.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                //Usuario user = (Usuario) dataSnapshot.getValue(Usuario.class);
+
+                String attUser = new String (dataSnapshot.getValue(String.class));
+                arrayString.add(attUser);
+
+                arrayAdapter.notifyDataSetChanged();
+            }
 
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.i("FIREBASE", dataSnapshot.getValue().toString());
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
             }
 
             @Override
@@ -64,6 +109,34 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
+
+
+
+//
+//        usuariosReferenciaFB.addValueEventListener(new ValueEventListener() {
+//
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                Log.i("FIREBASE", dataSnapshot.getValue().toString());
+////                Toast.makeText(MainActivity.this, dataSnapshot.getValue().toString(), Toast.LENGTH_SHORT)
+////                        .show();
+//
+//                /* Se o tipo a ser recuperado for String apenas (não for objeto):
+//                * Map<String, String>  map = dataSnapshot.getValue(Map.class);
+//                * String nome = map.get("nomeDoNo") */
+//                Usuario user = (Usuario) dataSnapshot.getValue(Usuario.class);
+//
+//                Toast.makeText(MainActivity.this, user.getNome(), Toast.LENGTH_SHORT)
+//                        .show();
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
 
     }
 }
