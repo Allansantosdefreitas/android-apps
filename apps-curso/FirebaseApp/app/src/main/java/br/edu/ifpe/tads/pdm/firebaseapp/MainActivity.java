@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private ListView listViewGUI;
-    private ArrayList<Usuario> arrayUsuarios = new ArrayList<>();
+    private ArrayList<String> arrayUsuarios = new ArrayList<>();
 
     /* Referencia o nó Raiz (root) da estrutura de dados do Firebase ;) */
     private DatabaseReference firebaseReferenciaRaiz = FirebaseDatabase.getInstance()
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 //        arrayString.add("hi");
 //        arrayString.add("hey");
 
-        final ArrayAdapter<Usuario> arrayAdapter = new ArrayAdapter<Usuario>(
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
             this,
             android.R.layout.simple_list_item_1,
             arrayUsuarios
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
                 Usuario user = (Usuario) dataSnapshot.getValue(Usuario.class);
-                arrayUsuarios.add(user);
+                arrayUsuarios.add(user.getNome());
 
 //                String attUser = new String (dataSnapshot.getValue(String.class));
 //                arrayUsuarios.add(attUser);
