@@ -84,21 +84,27 @@ public class MainActivity extends AppCompatActivity {
                 Usuario user = (Usuario) dataSnapshot.getValue(Usuario.class);
                 arrayUsuarios.add(user.getNome());
 
-//                String attUser = new String (dataSnapshot.getValue(String.class));
-//                arrayUsuarios.add(attUser);
-
-
                 arrayAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
+
+//                Usuario user = (Usuario) dataSnapshot.getValue(Usuario.class);
+//                arrayUsuarios.add(user.getNome());
+//
+//                arrayAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
 
+//                Usuario user = (Usuario) dataSnapshot.getValue(Usuario.class);
+//                arrayUsuarios.add(user.getNome());
+//
+//
+//                arrayAdapter.notifyDataSetChanged();
             }
 
             @Override
