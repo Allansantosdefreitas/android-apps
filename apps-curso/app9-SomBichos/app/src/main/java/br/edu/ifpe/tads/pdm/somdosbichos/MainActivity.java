@@ -96,12 +96,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void tocarSom() {
 
-        pararSom();
-
         if (mediaPlayer != null) {
-
-
             mediaPlayer.start();
+
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    mediaPlayer.release();
+
+                };
+            });
 
         }
     }
