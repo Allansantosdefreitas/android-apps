@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
-public class MainActivity extends AppCompatActivity {
+import java.io.IOException;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
 
     MediaPlayer mediaPlayer;
@@ -26,70 +28,106 @@ public class MainActivity extends AppCompatActivity {
         sheepImageView = findViewById(R.id.sheepImageId);
         cowImageView = findViewById(R.id.cowImageId);
 
-        dogImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.cao);
+        dogImageView.setOnClickListener(this);
+        catImageView.setOnClickListener(this);
+        lionImageView.setOnClickListener(this);
+        monkeyImageView.setOnClickListener(this);
+        sheepImageView.setOnClickListener(this);
+        cowImageView.setOnClickListener(this);
 
+/* This is a TRASH CODE:
+ * WOW: A listener for each ImageView!! This wasn't the best way to do it. */
+//        dogImageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.cao);
+//
+//                tocarSom();
+//            }
+//        });
+
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+            case R.id.dogImageId:
+                mediaPlayer = MediaPlayer.create(MainActivity.this,
+                        R.raw.cao);
                 tocarSom();
-            }
-        });
+                break;
 
-        catImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
+            case R.id.catImageId:
                 mediaPlayer = MediaPlayer.create(MainActivity.this,
                         R.raw.gato);
-
                 tocarSom();
+                break;
 
-            }
-        });
-
-        lionImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.lionImageId:
                 mediaPlayer = MediaPlayer.create(MainActivity.this,
                         R.raw.leao);
-
                 tocarSom();
-            }
-        });
+                break;
 
-        monkeyImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.monkeyImageId:
                 mediaPlayer = MediaPlayer.create(MainActivity.this,
                         R.raw.macaco);
                 tocarSom();
-            }
-        });
+                break;
 
-        sheepImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mediaPlayer = MediaPlayer.create(getApplicationContext(),
+            case R.id.sheepImageId:
+                mediaPlayer = MediaPlayer.create(MainActivity.this,
                         R.raw.ovelha);
-
                 tocarSom();
-            }
-        });
+                break;
 
-        cowImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mediaPlayer = MediaPlayer.create(getApplicationContext(),
+            case R.id.cowImageId:
+                mediaPlayer = MediaPlayer.create(MainActivity.this,
                         R.raw.vaca);
                 tocarSom();
-            }
-        });
+                break;
+
+        }
 
     }
 
     private void tocarSom() {
-        mediaPlayer.start();
+
+        pararSom();
+
+        if (mediaPlayer != null) {
+
+
+            mediaPlayer.start();
+
+        }
     }
 
+    private void pararSom(){
+
+        if (mediaPlayer != null && mediaPlayer.isPlaying() ){
+            mediaPlayer.stop();
+
+            try {
+                mediaPlayer.prepare();
+            }catch(IOException ex){
+                ex.printStackTrace();
+            }
+
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        if (mediaPlayer != null) {
+            mediaPlayer.release(); /* Free resources */
+            mediaPlayer = null;
+        }
+
+        super.onDestroy();
+    }
 }
