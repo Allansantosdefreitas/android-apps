@@ -23,14 +23,17 @@ public class MainActivity extends Activity {
             String columnName = "name";
             String columnAge = "age";
 
-                /* Creting table :) */
+                /* Creting table :) ---------------------------------- */
             sqLiteDatabase.execSQL(
                     "CREATE TABLE IF NOT EXISTS " + tablePersons +
-                            "( name VARCHAR, age INT(3) )"
+                            "( id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                            "name VARCHAR, " +
+                            "age INT(3) )"
 
             );
 
-        /* Inserting data :) */
+
+        /* Inserting data :) ----------------------------------------- */
             sqLiteDatabase.execSQL(
                     "INSERT INTO " + tablePersons + " (name, age) " +
                             "VALUES " +
@@ -55,11 +58,24 @@ public class MainActivity extends Activity {
                             "('John', 73)"
             );
 
+            /* Updating data -------------------------- */
+            sqLiteDatabase.execSQL(
+                    "UPDATE " + tablePersons + " SET age = 28 " +
+                            "WHERE name  = 'Mathew' ");
+
+            /* Deleting data ------------------------- */
+
+
         /* Retrieving data from table with a SQL query... */
-            Cursor cursor = sqLiteDatabase.rawQuery("SELECT name, age FROM " + tablePersons,
+//            Cursor cursor = sqLiteDatabase.rawQuery("SELECT name, age FROM " + tablePersons +
+//                            " WHERE name LIKE 'Mat%'",
+//                    null);
+
+            Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM "+ tablePersons,
                     null);
 
         /* Get the index value from column name */
+            int idColumnIndex = cursor.getColumnIndex("id");
             int nameColumnIndex = cursor.getColumnIndex("name");
             int ageColumnIndex = cursor.getColumnIndex("age");
 
@@ -68,15 +84,22 @@ public class MainActivity extends Activity {
 
             while (cursor != null) {
 
+                Log.i("RESULTADO: id", cursor.getString(idColumnIndex));
                 Log.i("RESULTADO: name", cursor.getString(nameColumnIndex));
                 Log.i("RESULTADO: age", cursor.getString(ageColumnIndex));
 
             /* To next line ;) */
                 cursor.moveToNext();
             }
+
+            /* Dropping table */
+//            sqLiteDatabase.execSQL("DROP TABLE "+ tablePersons);
+
+
         } catch (Exception e) {
 
             e.printStackTrace();
+            Log.i("RESULTADO: ERRO", e.getMessage());
         }
 
     }
