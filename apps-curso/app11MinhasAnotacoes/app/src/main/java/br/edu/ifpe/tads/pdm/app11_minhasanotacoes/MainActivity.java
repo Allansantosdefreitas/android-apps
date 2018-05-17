@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -44,11 +45,18 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        /* Recuperar o conteúdo gravado no arquivo */
+        /* De qualquer forma, todas as vezes:
+            Verifica se há conteúdo gravado no arquivo
+                caso sim:
+                   Atribui o conteúdo ao elemento EditTex "textoAnotacaoEl"
+       */
         String textoAnotacaoRecuperado = recuperarAnotacao();
 
         if ( textoAnotacaoRecuperado != null ){
             textoAnotacaoEl.setText(textoAnotacaoRecuperado);
+
+            /* Put the cursor at the end of the text */
+            textoAnotacaoEl.setSelection(textoAnotacaoEl.getText().length());
         }
     }
 
@@ -60,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
                     /* NOME DO ARQUIVO, MODO DE GRAVAÇÃO */
                     openFileOutput(ARQUIVO_ANOTACAO, Context.MODE_PRIVATE)
             );
+
             /* Grava a anotação no arquivo */
             outputStreamWriter.write(textoDigitadoAnotacao);
 

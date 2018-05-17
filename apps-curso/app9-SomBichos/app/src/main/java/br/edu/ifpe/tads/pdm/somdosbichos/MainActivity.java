@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         sheepImageView = findViewById(R.id.sheepImageId);
         cowImageView = findViewById(R.id.cowImageId);
 
-
         dogImageView.setOnClickListener(this);
         catImageView.setOnClickListener(this);
         lionImageView.setOnClickListener(this);
@@ -109,19 +108,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void pararSom(){
-
-        if (mediaPlayer != null && mediaPlayer.isPlaying() ){
-            mediaPlayer.stop();
-
-            try {
-                mediaPlayer.prepare();
-            }catch(IOException ex){
-                ex.printStackTrace();
-            }
-
-        }
-    }
+//    private void pararSom(){
+//
+//        if (mediaPlayer != null && mediaPlayer.isPlaying() ){
+//            mediaPlayer.stop();
+//
+//            try {
+//                mediaPlayer.prepare();
+//            }catch(IOException ex){
+//                ex.printStackTrace();
+//            }
+//
+//        }
+//    }
 
     @Override
     protected void onDestroy() {
