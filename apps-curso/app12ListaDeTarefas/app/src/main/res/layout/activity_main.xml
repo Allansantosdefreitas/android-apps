@@ -30,7 +30,7 @@
         android:id="@+id/listViewTasksId"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignStart="@+id/textSaveId"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/buttonSaveId"
-        android:layout_marginTop="15dp" />
+        android:layout_marginTop="13dp" />
 </RelativeLayout>

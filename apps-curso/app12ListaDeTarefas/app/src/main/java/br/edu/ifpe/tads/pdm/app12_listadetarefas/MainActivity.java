@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayAdapter<String> tasksArrayAdapter;
     private ArrayList<String> tasksArrayList;
+    private ArrayList<Integer> tasksIdsArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,38 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+
+            listViewTasksEL.setLongClickable(true);
+
+            listViewTasksEL.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    Integer idTask = tasksIdsArrayList.get(position);
+                    deleteTask( idTask );
+                    retrieveTasks();
+
+                    return false;
+                }
+            });
+//            listViewTasksEL.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//
+//                @Override
+//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//                    Integer idTask = tasksIdsArrayList.get(position);
+//                    String valueTask = tasksArrayList.get(position);
+//
+////                    Toast.makeText( MainActivity.this, " id: "+ id + "value: " +
+////                            valueTask, Toast.LENGTH_SHORT)
+////                                .show();
+//
+//                    deleteTask( idTask );
+//                    retrieveTasks();
+//                }
+//            });
+
             retrieveTasks();
 
         } catch (Exception e) {
@@ -84,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                 sqLiteDatabaseTasks.execSQL(
                         "INSERT INTO TB_tasks (taskValue) VALUES" +
                                 "( " +
-                                " '" + taskValue + "' " +
+                                "'" + taskValue + "'" +
                                 ")"
                 );
 
@@ -92,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
 
                 taskValueEL.setText("");
+
                 retrieveTasks();
 
             }
@@ -108,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
         try {
 
             tasksArrayList = new ArrayList<String>();
+            tasksIdsArrayList = new ArrayList<Integer>();
 
             tasksArrayAdapter = new ArrayAdapter<String>(
                     getApplicationContext(),
@@ -118,33 +154,54 @@ public class MainActivity extends AppCompatActivity {
 
             listViewTasksEL.setAdapter(tasksArrayAdapter);
 
+            /* Select all tasks */
             Cursor cursor = sqLiteDatabaseTasks.rawQuery(
-                    "SELECT taskValue FROM TB_tasks ORDER BY id DESC",
+                    "SELECT * FROM TB_tasks ORDER BY id DESC",
                     null
             );
 
-
             /* Getting the index (integer value) of field 'taskValue' */
             int indexTaskValue = cursor.getColumnIndex("taskValue");
+            int indexTaskId = cursor.getColumnIndex("id");
 
             cursor.moveToFirst();
 
             while (cursor != null) {
 
                 String taskValueTemp =  cursor.getString(indexTaskValue);
+                Integer taskIdTemp = Integer.parseInt( cursor.getString( indexTaskId ) );
 
-                tasksArrayList.add( taskValueTemp );
+                                                     /* id, value */
+                tasksArrayList.add( taskValueTemp ); /*  0, task1 */
+                tasksIdsArrayList.add(taskIdTemp);   /*  0, 1    */
+
 
                 Log.i("RESULT: task", taskValueTemp);
 
                 cursor.moveToNext();
             }
 
-
-
         }catch ( Exception e ){
             e.printStackTrace();
         }
 
     }
+
+    private void deleteTask(Integer taskId){
+
+        try{
+
+            sqLiteDatabaseTasks.execSQL("" +
+                    "DELETE FROM TB_tasks WHERE id = "+ taskId
+            );
+
+            Toast.makeText(getApplicationContext(), "Task deleted successfully! :) ",
+                    Toast.LENGTH_SHORT).show();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
 }
