@@ -8,13 +8,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class FlappyBird extends ApplicationAdapter {
 
+    private int larguraDispositivo;
+    private  int alturaDispositivo;
 
     private SpriteBatch batch;
     private Texture fundo;
-    private Texture passaro;
-    private  int movimento = 0;
-    private int larguraDispositivo;
-    private  int alturaDispositivo;
+    private Texture[] passarosAnimacaoArray;
+
+    private  float variacaoAnimacaoPassaro = 0;
+    private  float variacaoQuedaPassaro = 0;
 
     @Override
     public void create() {
@@ -24,25 +26,40 @@ public class FlappyBird extends ApplicationAdapter {
 
         batch = new SpriteBatch();
         fundo = new Texture("fundo.png");
-        passaro = new Texture("passaro1.png");
+        
+        passarosAnimacaoArray = new Texture[3];
+
+        passarosAnimacaoArray[0] = new Texture("passaro1.png");
+        passarosAnimacaoArray[1] = new Texture("passaro2.png");
+        passarosAnimacaoArray[2] = new Texture("passaro3.png");
 
     }
 
     @Override
     public void render() {
-
         /* Corrigir problema de aparecimento de vários pássaros ;) */
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
 
+        /* Desenhar fundo ----------- */
         batch.draw(fundo, 0, 0, larguraDispositivo, alturaDispositivo);
-        batch.draw(passaro, movimento,  alturaDispositivo / 2);
 
+        if( variacaoAnimacaoPassaro > 2 ){
+            variacaoAnimacaoPassaro = 0;
+        }
+        /* Animação do pássaro ;) */
+        batch.draw(passarosAnimacaoArray[ (int) variacaoAnimacaoPassaro], 30,  alturaDispositivo / 2);
 
         batch.end();
 
-        movimento = movimento + 5;
+//        variacaoAnimacao += 0.1;
+
+        /* getDeltaTime obtém a variação de tempo entre cada chamada do método render()..
+        * entre o frame atual e o último frame ;) */
+        variacaoAnimacaoPassaro += Gdx.graphics.getDeltaTime() * 7;
+        Gdx.app.log("variacao", "variacaoAnimacao: "+ variacaoAnimacaoPassaro);
+
     }
 
 
