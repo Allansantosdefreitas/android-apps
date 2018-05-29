@@ -10,33 +10,39 @@ public class FlappyBird extends ApplicationAdapter {
 
 
     private SpriteBatch batch;
+    private Texture fundo;
     private Texture passaro;
-
-//    private int contador = 0;
+    private  int movimento = 0;
+    private int larguraDispositivo;
+    private  int alturaDispositivo;
 
     @Override
     public void create() {
-//        Gdx.app.log("Create", "Início do jogo");
+
+        larguraDispositivo = Gdx.graphics.getWidth();
+        alturaDispositivo = Gdx.graphics.getHeight();
 
         batch = new SpriteBatch();
+        fundo = new Texture("fundo.png");
         passaro = new Texture("passaro1.png");
+
     }
 
     @Override
     public void render() {
 
         /* Corrigir problema de aparecimento de vários pássaros ;) */
-//        Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-//        contador++;
-//        Gdx.app.log("Render", "Renderizando o jogo: " + contador);
 
         batch.begin();
 
-        batch.draw(passaro, 150, 800);
+        batch.draw(fundo, 0, 0, larguraDispositivo, alturaDispositivo);
+        batch.draw(passaro, movimento,  alturaDispositivo / 2);
+
 
         batch.end();
 
+        movimento = movimento + 5;
     }
 
 
