@@ -17,6 +17,7 @@ public class FlappyBird extends ApplicationAdapter {
 
     private  float variacaoAnimacaoPassaro = 0;
     private  float variacaoQuedaPassaro = 0;
+    private  float alturaAtualPassaro = 0;
 
     @Override
     public void create() {
@@ -33,6 +34,10 @@ public class FlappyBird extends ApplicationAdapter {
         passarosAnimacaoArray[1] = new Texture("passaro2.png");
         passarosAnimacaoArray[2] = new Texture("passaro3.png");
 
+        /* Centralizar verticalmente o pássaro na tela */
+        alturaAtualPassaro = alturaDispositivo / 2;
+
+        variacaoQuedaPassaro = 7;
     }
 
     @Override
@@ -40,7 +45,10 @@ public class FlappyBird extends ApplicationAdapter {
         /* Corrigir problema de aparecimento de vários pássaros ;) */
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        batch.begin();
+
+
+
+        batch.begin(); /* -------------------------------------------------- */
 
         /* Desenhar fundo ----------- */
         batch.draw(fundo, 0, 0, larguraDispositivo, alturaDispositivo);
@@ -48,17 +56,37 @@ public class FlappyBird extends ApplicationAdapter {
         if( variacaoAnimacaoPassaro > 2 ){
             variacaoAnimacaoPassaro = 0;
         }
-        /* Animação do pássaro ;) */
-        batch.draw(passarosAnimacaoArray[ (int) variacaoAnimacaoPassaro], 30,  alturaDispositivo / 2);
 
-        batch.end();
 
-//        variacaoAnimacao += 0.1;
+        /* Animação do pássaro mais lenta ;) */
+        batch.draw(passarosAnimacaoArray[ (int) variacaoAnimacaoPassaro], 30,
+                alturaAtualPassaro);
+
+
+
+        batch.end(); /* -------------------------------------------------- */
+
 
         /* getDeltaTime obtém a variação de tempo entre cada chamada do método render()..
-        * entre o frame atual e o último frame ;) */
+        * entre o frame atual e o último frame ;)
+         * para fazer a animação mais lenta, multiplica-se por 7 */
         variacaoAnimacaoPassaro += Gdx.graphics.getDeltaTime() * 7;
-        Gdx.app.log("variacao", "variacaoAnimacao: "+ variacaoAnimacaoPassaro);
+
+        /* Variação da altura do pássaro..enquanto não estiver no chão, cai */
+        //Gdx.app.log("alturaPassaro", "quedaPAROU: " + alturaAtualPassaro);
+
+        if ( (alturaAtualPassaro -= variacaoQuedaPassaro)  > 0 ){
+        /*  */
+            Gdx.app.log("alturaPassaro", "quedaCONTINUA: " + alturaAtualPassaro);
+            alturaAtualPassaro -= variacaoQuedaPassaro;
+            Gdx.app.log("alturaPassaro", "quedaCONTINUA: " + alturaAtualPassaro);
+        }else {
+            alturaAtualPassaro = 0;
+        }
+
+
+
+//        Gdx.app.log("variacao", "variacaoAnimacao: "+ variacaoAnimacaoPassaro);
 
     }
 
