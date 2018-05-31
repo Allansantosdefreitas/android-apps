@@ -9,17 +9,19 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class FlappyBird extends ApplicationAdapter {
 
     private int larguraDispositivo;
-    private  int alturaDispositivo;
+    private int alturaDispositivo;
 
     private SpriteBatch batch;
     private Texture fundo;
     private Texture[] passarosAnimacaoArray;
 
-    private  float variacaoAnimacaoPassaro = 0;
-    private  float variacaoQuedaPassaro = 0;
-    private  float alturaAtualPassaro = 0;
-    private  float posicaoHorizontalPassaro = 30;
+    private float variacaoAnimacaoPassaro = 0;
+    private float variacaoQuedaPassaro = 0;
+    private float alturaAtualPassaro = 0;
+    private float posicaoHorizontalPassaro = 30;
 
+    private float passaroHeightSize = 0;
+    private float passaroWidthSize = 0;
 
     @Override
     public void create() {
@@ -29,15 +31,20 @@ public class FlappyBird extends ApplicationAdapter {
 
         batch = new SpriteBatch();
         fundo = new Texture("fundo.png");
-        
+
         passarosAnimacaoArray = new Texture[3];
 
         passarosAnimacaoArray[0] = new Texture("passaro1.png");
         passarosAnimacaoArray[1] = new Texture("passaro2.png");
         passarosAnimacaoArray[2] = new Texture("passaro3.png");
 
+        /* Dimensões do pássaro */
+        passaroWidthSize = passarosAnimacaoArray[0].getWidth() * (float) 1.5;
+        passaroHeightSize = passarosAnimacaoArray[0].getHeight() * (float) 1.5;
+
         /* Centralizar verticalmente o pássaro na tela */
         alturaAtualPassaro = alturaDispositivo / 2;
+
 
         //variacaoQuedaPassaro = 10;
     }
@@ -51,24 +58,34 @@ public class FlappyBird extends ApplicationAdapter {
         variacaoAnimacaoPassaro += Gdx.graphics.getDeltaTime() * 10;
         variacaoQuedaPassaro++;
 
+
         /* Animação do pássaro */
-        if( variacaoAnimacaoPassaro > 2 ){
+        if (variacaoAnimacaoPassaro > 2) {
             variacaoAnimacaoPassaro = 0;
         }
 
         /* Voada do pássaro */
-        if (Gdx.input.justTouched() ){
-            variacaoQuedaPassaro =  variacaoQuedaPassaro - 30;
+        if (Gdx.input.justTouched()) {
+            variacaoQuedaPassaro = variacaoQuedaPassaro - 30;
         }
 
         /* Queda do pássaro */
-        if (alturaAtualPassaro >= 0 || variacaoQuedaPassaro < 0){
+        if (alturaAtualPassaro >= 0 || variacaoQuedaPassaro < 0) {
             alturaAtualPassaro = alturaAtualPassaro - variacaoQuedaPassaro;
             Gdx.app.log("altura", "altura: " + alturaAtualPassaro);
         }
         /* Não pode ficar abaixo do chão ;) */
-        if (alturaAtualPassaro < 0 ){
+        if (alturaAtualPassaro < 0) {
             alturaAtualPassaro = 0;
+            variacaoQuedaPassaro = 0;
+        }
+
+        /* Não pode passar do teto também ;) */
+        if (alturaAtualPassaro > alturaDispositivo) {
+            alturaAtualPassaro = alturaDispositivo - passaroHeightSize - 30;
+            variacaoQuedaPassaro = 0;
+            Gdx.app.log("PASSOU", "passou: " + alturaAtualPassaro);
+
         }
 
         batch.begin(); /* -------------------------------------------------- */
@@ -77,11 +94,11 @@ public class FlappyBird extends ApplicationAdapter {
         batch.draw(fundo, 0, 0, larguraDispositivo, alturaDispositivo);
 
         /* Animação (troca de imagens) do pássaro */
-        batch.draw(passarosAnimacaoArray[ (int) variacaoAnimacaoPassaro],
+        batch.draw(passarosAnimacaoArray[(int) variacaoAnimacaoPassaro],
                 posicaoHorizontalPassaro,
                 alturaAtualPassaro,
-                ( passarosAnimacaoArray[0].getWidth() *  (float) 1.5),
-                passarosAnimacaoArray[0].getHeight() * (float) 1.5);
+                (passaroWidthSize),
+                passaroHeightSize);
 
         batch.end(); /* -------------------------------------------------- */
 
@@ -107,7 +124,7 @@ public class FlappyBird extends ApplicationAdapter {
 //            alturaAtualPassaro += 50;
 //        }
 
-  }
+    }
 
 
 }
