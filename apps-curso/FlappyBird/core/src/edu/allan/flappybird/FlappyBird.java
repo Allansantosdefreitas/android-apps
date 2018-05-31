@@ -37,15 +37,13 @@ public class FlappyBird extends ApplicationAdapter {
         /* Centralizar verticalmente o pássaro na tela */
         alturaAtualPassaro = alturaDispositivo / 2;
 
-        variacaoQuedaPassaro = 7;
+        variacaoQuedaPassaro = 10;
     }
 
     @Override
     public void render() {
         /* Corrigir problema de aparecimento de vários pássaros ;) */
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-
 
 
         batch.begin(); /* -------------------------------------------------- */
@@ -57,11 +55,12 @@ public class FlappyBird extends ApplicationAdapter {
             variacaoAnimacaoPassaro = 0;
         }
 
-
         /* Animação do pássaro mais lenta ;) */
-        batch.draw(passarosAnimacaoArray[ (int) variacaoAnimacaoPassaro], 30,
-                alturaAtualPassaro);
-
+        batch.draw(passarosAnimacaoArray[ (int) variacaoAnimacaoPassaro],
+                30,
+                alturaAtualPassaro,
+                ( passarosAnimacaoArray[0].getWidth() *  (float) 1.5),
+                passarosAnimacaoArray[0].getHeight() * (float) 1.5);
 
 
         batch.end(); /* -------------------------------------------------- */
@@ -75,14 +74,21 @@ public class FlappyBird extends ApplicationAdapter {
         /* Variação da altura do pássaro..enquanto não estiver no chão, cai */
         //Gdx.app.log("alturaPassaro", "quedaPAROU: " + alturaAtualPassaro);
 
-        if ( (alturaAtualPassaro -= variacaoQuedaPassaro)  > 0 ){
+        if ( (alturaAtualPassaro -= variacaoQuedaPassaro)  >= 0 ){
         /*  */
-            Gdx.app.log("alturaPassaro", "quedaCONTINUA: " + alturaAtualPassaro);
-            alturaAtualPassaro -= variacaoQuedaPassaro;
+
+           alturaAtualPassaro -= variacaoQuedaPassaro;
             Gdx.app.log("alturaPassaro", "quedaCONTINUA: " + alturaAtualPassaro);
         }else {
             alturaAtualPassaro = 0;
         }
+
+
+        if (Gdx.input.justTouched() ){
+            alturaAtualPassaro += 150;
+        }
+
+
 
 
 
