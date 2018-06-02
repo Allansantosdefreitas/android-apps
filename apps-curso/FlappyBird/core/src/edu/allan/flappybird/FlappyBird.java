@@ -2,9 +2,10 @@ package edu.allan.flappybird;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+import java.util.Random;
 
 public class FlappyBird extends ApplicationAdapter {
 
@@ -18,7 +19,8 @@ public class FlappyBird extends ApplicationAdapter {
     //Atributos de configuracao
     private int larguraDispositivo;
     private int alturaDispositivo;
-    private float distanciaHorizontal = 30;
+    private float distanciaHorizontalPassaro = 150;
+    private float deltaTime = 0;
 
     private float variacao = 0;
     private float velocidadeQueda = 0;
@@ -30,12 +32,14 @@ public class FlappyBird extends ApplicationAdapter {
 
     /* Configurações dos canos ----- */
 
-    private float distanciaHorizontalEntreCanos = 0;
-    private float distanciaVerticalEntreCanos = 300;
-    private float distanciaDoTetoCanoSuperior = 0; // igual ou maior que height do texture
-    private float distanciaDoChaoCanoInferior = 0; // 0  ou menor que zero
-    private float distanciaHorizontalUltimoCano = 0;
-    private float distanciaHorizontalCanoAtual = 0;
+    //private float distanciaHorizontalEntreCanos = 0;
+    private float distanciaVerticalEntreCanos = 500;
+    //    private float distanciaDoTetoCanoSuperior = 0; // igual ou maior que height do texture
+//    private float distanciaDoChaoCanoInferior = 0; // 0  ou menor que zero
+    private float distanciaHorizontalCano = 0;
+    private Random random;
+    private float distanciaVerticalEntreCanosRandom = 0;
+
 
     /* Game over */
     private boolean atingido = false;
@@ -65,12 +69,15 @@ public class FlappyBird extends ApplicationAdapter {
         passaroWidthSize = (float) (passaros[0].getWidth() * 1.5);
 
 
+        distanciaHorizontalCano = larguraDispositivo - canoSuperior.getWidth();
+        random = new Random();
     }
 
     @Override
     public void render() {
 
-        variacao += Gdx.graphics.getDeltaTime() * 10;
+        deltaTime = Gdx.graphics.getDeltaTime();
+        variacao += deltaTime * 10;
         velocidadeQueda++;
 
         if (variacao > 2) variacao = 0;
@@ -79,10 +86,12 @@ public class FlappyBird extends ApplicationAdapter {
             velocidadeQueda = -15;
         }
 
+
         if (posicaoInicialVertical > 0 || velocidadeQueda < 0) {
             posicaoInicialVertical = posicaoInicialVertical - velocidadeQueda;
 
         }
+
 
         /* Não pode ficar abaixo do chão ;) */
         if (posicaoInicialVertical < 0) {
@@ -97,16 +106,35 @@ public class FlappyBird extends ApplicationAdapter {
             velocidadeQueda = 0;
         }
 
+        /* Canos ----------------------------------------------------------- */
+
+//        /* Quando o cano chega na metade... */
+//        if (distanciaHorizontalCano <= (larguraDispositivo /2 )){
+//
+//            /* Aparece outro */
+//            distanciaHorizontalCano = larguraDispositivo;
+//        }
+
+        /* Quando o cano passar da tela, pela esquerda... */
+        if (distanciaHorizontalCano < (0 - canoSuperior.getWidth())) {
+
+            /* Aparece de novo */
+            distanciaHorizontalCano = larguraDispositivo;
+            distanciaVerticalEntreCanosRandom = random.nextInt(500) - 250;
+        }
+
+        /* Movimento dos canos na reta x em direção a 0 */
+        distanciaHorizontalCano -= deltaTime * 200;
+
 
         batch.begin();
 
-
         batch.draw(fundo, 0, 0, larguraDispositivo, alturaDispositivo);
 
-        distanciaHorizontalEntreCanos = 600; // Randomico de no mínimo 600
-        distanciaVerticalEntreCanos = 400; // Randomico de no mínimo 400?
-        distanciaDoTetoCanoSuperior = canoSuperior.getHeight(); // igual ou maior que height do texture
-        distanciaDoChaoCanoInferior = 0; // 0  ou menor que zero
+//        distanciaHorizontalEntreCanos = 600; // Randomico de no mínimo 600
+//        distanciaVerticalEntreCanos = 400; // Randomico de no mínimo 400?
+//        distanciaDoTetoCanoSuperior = canoSuperior.getHeight(); // igual ou maior que height do texture
+//        distanciaDoChaoCanoInferior = 0; // 0  ou menor que zero
 
         /* SUGESTÃO (I) de Miquéias: Colocar os canos se mexendo verticalmente,
         * mantendo a mesma distância vertical entre canos \0/
@@ -139,31 +167,31 @@ public class FlappyBird extends ApplicationAdapter {
 //            //batch.draw(canoInferior, 700, - 300);
 //        }
 
-        Gdx.app.log("Altura dispositivo ", "altura: " +  alturaDispositivo);
+        Gdx.app.log("Altura dispositivo ", "altura: " + alturaDispositivo);
         Gdx.app.log("superiorHeight ", "superior: " + canoSuperior.getHeight());
         Gdx.app.log("inferiorHeight ", "inferior: " + canoInferior.getHeight());
 
         batch.draw(canoSuperior,
-                larguraDispositivo -canoSuperior.getWidth(),
-                (alturaDispositivo / 2) + (distanciaVerticalEntreCanos / 2)
+                distanciaHorizontalCano,
+                (alturaDispositivo / 2) + (distanciaVerticalEntreCanos / 2) + distanciaVerticalEntreCanosRandom
         );
 
 
         batch.draw(canoInferior,
-                larguraDispositivo - canoInferior.getWidth(),
-                0 - (distanciaVerticalEntreCanos / 2)
+                distanciaHorizontalCano,
+                0 - (distanciaVerticalEntreCanos / 2) + (distanciaVerticalEntreCanosRandom)
         );
-
 
 
 //        batch.draw(canoSuperior, larguraDispositivo -canoSuperior.getWidth(), alturaDispositivo - canoSuperior.getHeight());
 //        batch.draw(canoInferior, larguraDispositivo - canoInferior.getWidth(), 0);
 
         batch.draw(passaros[(int) variacao],
-                distanciaHorizontal,
+                distanciaHorizontalPassaro,
                 posicaoInicialVertical,
                 passaroWidthSize,
                 passaroHeightSize);
+
 
         batch.end();
 
