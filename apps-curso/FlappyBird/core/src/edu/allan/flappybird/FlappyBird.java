@@ -2,7 +2,9 @@ package edu.allan.flappybird;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.Random;
@@ -15,12 +17,16 @@ public class FlappyBird extends ApplicationAdapter {
     private Texture fundo;
     private Texture canoSuperior;
     private Texture canoInferior;
+    private BitmapFont fonte;
 
     //Atributos de configuracao
     private int larguraDispositivo;
     private int alturaDispositivo;
     private float distanciaHorizontalPassaro = 150;
     private float deltaTime = 0;
+    private Integer estadoJogo = 0;
+    private Integer pontuacao = 0;
+    private boolean marcouPonto = false;
 
     private float variacao = 0;
     private float velocidadeQueda = 0;
@@ -48,6 +54,9 @@ public class FlappyBird extends ApplicationAdapter {
     public void create() {
 
         batch = new SpriteBatch();
+        fonte = new BitmapFont();
+        fonte.setColor(Color.WHITE);
+        fonte.getData().setScale(8);
 
         passaros = new Texture[3];
         passaros[0] = new Texture("passaro1.png");
@@ -78,54 +87,70 @@ public class FlappyBird extends ApplicationAdapter {
 
         deltaTime = Gdx.graphics.getDeltaTime();
         variacao += deltaTime * 10;
-        velocidadeQueda++;
 
         if (variacao > 2) variacao = 0;
 
-        if (Gdx.input.justTouched()) {
-            velocidadeQueda = -15;
-        }
+        if (estadoJogo == 0) {
+
+            /* Se tocar na tela ... */
+            if (Gdx.input.justTouched()) {
+                estadoJogo = 1; /* Inicia o jogo */
+            }
+        } else {
+
+            velocidadeQueda++;
 
 
-        if (posicaoInicialVertical > 0 || velocidadeQueda < 0) {
-            posicaoInicialVertical = posicaoInicialVertical - velocidadeQueda;
+            if (Gdx.input.justTouched()) {
+                velocidadeQueda = -15;
+            }
 
-        }
+
+            if (posicaoInicialVertical > 0 || velocidadeQueda < 0) {
+                posicaoInicialVertical = posicaoInicialVertical - velocidadeQueda;
+
+            }
 
 
         /* Não pode ficar abaixo do chão ;) */
-        if (posicaoInicialVertical < 0) {
-            posicaoInicialVertical = 0;
-            velocidadeQueda = 0;
-        }
+            if (posicaoInicialVertical < 0) {
+                posicaoInicialVertical = 0;
+                velocidadeQueda = 0;
+            }
 
 
         /* Não pode passar do teto também ;) */
-        if ((posicaoInicialVertical + passaroHeightSize) >= alturaDispositivo) {
-            posicaoInicialVertical = alturaDispositivo - passaroHeightSize;
-            velocidadeQueda = 0;
-        }
+            if ((posicaoInicialVertical + passaroHeightSize) >= alturaDispositivo) {
+                posicaoInicialVertical = alturaDispositivo - passaroHeightSize;
+                velocidadeQueda = 0;
+            }
 
         /* Canos ----------------------------------------------------------- */
 
-//        /* Quando o cano chega na metade... */
-//        if (distanciaHorizontalCano <= (larguraDispositivo /2 )){
-//
-//            /* Aparece outro */
-//            distanciaHorizontalCano = larguraDispositivo;
-//        }
+        /* Quando o cano passa do pássaro... */
+    if ( distanciaHorizontalCano < (distanciaHorizontalPassaro - passaroWidthSize) ){
+
+        if( !marcouPonto){
+            /* Incrementa a pontuação */
+            pontuacao++;
+            marcouPonto = true;
+        }
+    }
+
 
         /* Quando o cano passar da tela, pela esquerda... */
-        if (distanciaHorizontalCano < (0 - canoSuperior.getWidth())) {
+            if (distanciaHorizontalCano < (0 - canoSuperior.getWidth())) {
 
             /* Aparece de novo */
-            distanciaHorizontalCano = larguraDispositivo;
-            distanciaVerticalEntreCanosRandom = random.nextInt(500) - 250;
-        }
+                distanciaHorizontalCano = larguraDispositivo;
+                distanciaVerticalEntreCanosRandom = random.nextInt(500) - 250;
+                marcouPonto = false;
+            }
 
         /* Movimento dos canos na reta x em direção a 0 */
-        distanciaHorizontalCano -= deltaTime * 200;
+            distanciaHorizontalCano -= deltaTime * 300;
 
+        }
 
         batch.begin();
 
@@ -191,6 +216,11 @@ public class FlappyBird extends ApplicationAdapter {
                 posicaoInicialVertical,
                 passaroWidthSize,
                 passaroHeightSize);
+
+        fonte.draw(batch,
+                String.valueOf(pontuacao),
+                (larguraDispositivo / 2 ),
+                alturaDispositivo - 70 );
 
 
         batch.end();
