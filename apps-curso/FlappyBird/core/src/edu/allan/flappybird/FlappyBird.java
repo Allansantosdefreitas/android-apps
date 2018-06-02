@@ -31,7 +31,7 @@ public class FlappyBird extends ApplicationAdapter {
     /* Configurações dos canos ----- */
 
     private float distanciaHorizontalEntreCanos = 0;
-    private float distanciaVerticalEntreCanos = 0;
+    private float distanciaVerticalEntreCanos = 300;
     private float distanciaDoTetoCanoSuperior = 0; // igual ou maior que height do texture
     private float distanciaDoChaoCanoInferior = 0; // 0  ou menor que zero
     private float distanciaHorizontalUltimoCano = 0;
@@ -52,8 +52,8 @@ public class FlappyBird extends ApplicationAdapter {
 
         fundo = new Texture("fundo.png");
 
-        canoSuperior = new Texture("cano_topo.png");
-        canoInferior = new Texture("cano_baixo.png");
+        canoSuperior = new Texture("cano_topo_maior.png");
+        canoInferior = new Texture("cano_baixo_maior.png");
 
         larguraDispositivo = Gdx.graphics.getWidth();
         alturaDispositivo = Gdx.graphics.getHeight();
@@ -139,9 +139,25 @@ public class FlappyBird extends ApplicationAdapter {
 //            //batch.draw(canoInferior, 700, - 300);
 //        }
 
+        Gdx.app.log("Altura dispositivo ", "altura: " +  alturaDispositivo);
+        Gdx.app.log("superiorHeight ", "superior: " + canoSuperior.getHeight());
+        Gdx.app.log("inferiorHeight ", "inferior: " + canoInferior.getHeight());
 
-        batch.draw(canoSuperior, 100, alturaDispositivo - canoSuperior.getHeight());
-        batch.draw(canoInferior, 100, 0);
+        batch.draw(canoSuperior,
+                larguraDispositivo -canoSuperior.getWidth(),
+                (alturaDispositivo / 2) + (distanciaVerticalEntreCanos / 2)
+        );
+
+
+        batch.draw(canoInferior,
+                larguraDispositivo - canoInferior.getWidth(),
+                0 - (distanciaVerticalEntreCanos / 2)
+        );
+
+
+
+//        batch.draw(canoSuperior, larguraDispositivo -canoSuperior.getWidth(), alturaDispositivo - canoSuperior.getHeight());
+//        batch.draw(canoInferior, larguraDispositivo - canoInferior.getWidth(), 0);
 
         batch.draw(passaros[(int) variacao],
                 distanciaHorizontal,
@@ -154,6 +170,9 @@ public class FlappyBird extends ApplicationAdapter {
     }
 
 }
+
+
+
 
 
 /* <MY WAY> ------------------------------------------------ <my way>
